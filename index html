@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Interactiva de Obstetricia y Puericultura</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+    <h1>Malla Interactiva - Obstetricia y Puericultura</h1>
+    <p>Haz clic en los ramos para marcarlos como aprobados y desbloquear los siguientes niveles.</p>
+
+    <div class="malla-container">
+        <div class="semestre">
+            <h2>Semestre 1</h2>
+            <div class="ramo" id="qgo">Química general y orgánica</div>
+            <div class="ramo" id="bg">Biología y genética</div>
+            <div class="ramo" id="mat">Matemáticas</div>
+            <div class="ramo" id="fhas">Fund. humanistas para la atención en salud sexual...</div>
+            <div class="ramo" id="de">Demografía y epidemiología</div>
+            <div class="ramo" id="fg1">Formación General I</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 2</h2>
+            <div class="ramo" id="bmh" data-req='["qgo"]'>Bioquímica del metabolismo humano</div>
+            <div class="ramo" id="fis">Física</div>
+            <div class="ramo" id="ana">Anatomía</div>
+            <div class="ramo" id="he">Histología y embriología</div>
+            <div class="ramo" id="ma1">Matronería aplicada I</div>
+            <div class="ramo" id="gls">Gestión y liderazgo en salud</div>
+            <div class="ramo" id="ing1">Inglés I</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 3</h2>
+            <div class="ramo" id="fig" data-req='["fis", "bg"]'>Fisiología general</div>
+            <div class="ramo" id="sss" data-req='["fhas"]'>Salud sexual y sexualidad</div>
+            <div class="ramo" id="es" data-req='["fhas"]'>Educación en salud</div>
+            <div class="ramo" id="ma2" data-req='["ma1"]'>Matronería aplicada II</div>
+            <div class="ramo" id="sfc1" data-req='["de"]'>Salud familiar y comunitaria I</div>
+            <div class="ramo" id="hps" data-req='["gls"]'>Habilidades psicosociales...</div>
+            <div class="ramo" id="ing2">Inglés II</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 4</h2>
+            <div class="ramo" id="fs" data-req='["fig", "bmh", "he"]'>Fisiología de sistemas</div>
+            <div class="ramo" id="mfg" data-req='["bg", "bmh"]'>Microbiología I y farmacología general</div>
+            <div class="ramo" id="gin1" data-req='["sss"]'>Ginecología I</div>
+            <div class="ramo" id="obs1" data-req='["ma2", "he"]'>Obstetricia I</div>
+            <div class="ramo" id="neo1" data-req='["ma2"]'>Neonatología I</div>
+            <div class="ramo" id="ing3">Inglés III</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 5</h2>
+            <div class="ramo" id="cp1" data-req='["obs1", "fs", "mfg"]'>Clínica partos I</div>
+            <div class="ramo" id="cneo1" data-req='["neo1", "fs", "mfg"]'>Clínica neonatología I</div>
+            <div class="ramo" id="caps1" data-req='["gin1", "obs1", "sfc1"]'>Clínica atención primaria en salud I</div>
+            <div class="ramo" id="cpuer" data-req='["obs1", "fs", "mfg"]'>Clínica puerperio</div>
+            <div class="ramo" id="cgin1" data-req='["gin1", "mfg", "fs"]'>Clínica ginecología I</div>
+            <div class="ramo" id="di" data-req='["de"]'>Diseños de investigación</div>
+            <div class="ramo" id="eipc1">Educ. interprofesional y práctica colaborativa I</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 6</h2>
+            <div class="ramo" id="ffs" data-req='["mfg", "fs"]'>Fisiopatología y farmacología de sistemas</div>
+            <div class="ramo" id="mic2" data-req='["mfg"]'>Microbiología II</div>
+            <div class="ramo" id="neo2" data-req='["cneo1"]'>Neonatología II</div>
+            <div class="ramo" id="sfc2" data-req='["caps1"]'>Salud familiar y comunitaria II</div>
+            <div class="ramo" id="obs2" data-req='["cpuer", "cp1", "caps1"]'>Obstetricia II</div>
+            <div class="ramo" id="irps" data-req='["hps"]'>Identidad y responsabilidad profesional...</div>
+            <div class="ramo" id="bcpbe" data-req='["di"]'>Bases conceptuales para la práctica...</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 7</h2>
+            <div class="ramo" id="cie" data-req='["sfc2", "bcpbe", "es"]'>Clínica de intervenciones educativas</div>
+            <div class="ramo" id="mmq" data-req='["neo2", "obs2", "cgin1"]'>Matronería médico quirúrgica</div>
+            <div class="ramo" id="gin2" data-req='["cgin1"]'>Ginecología II</div>
+            <div class="ramo" id="gclm" data-req='["gls"]'>Gestión clínica y liderazgo en matronería</div>
+            <div class="ramo" id="sui1" data-req='["bcpbe"]'>Seminario unidad de investigación I</div>
+            <div class="ramo" id="fg2">Formación General II</div>
+            <div class="ramo" id="fg3">Formación General III</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestre 8</h2>
+            <div class="ramo" id="caro" data-req='["mmq"]'>Clínica alto riesgo obstétrico</div>
+            <div class="ramo" id="cp2" data-req='["mmq"]'>Clínica partos II</div>
+            <div class="ramo" id="cgin2" data-req='["gin2", "mmq"]'>Clínica ginecología II</div>
+            <div class="ramo" id="cneo2" data-req='["mmq"]'>Clínica neonatología II</div>
+            <div class="ramo" id="caps2" data-req='["cie", "mmq", "gin2"]'>Clínica atención primaria en salud II</div>
+            <div class="ramo" id="sui2" data-req='["sui1"]'>Seminario unidad de investigación II</div>
+            <div class="ramo" id="eipc2" data-req='["eipc1"]'>Educ. interprofesional y práctica colaborativa II</div>
+        </div>
+
+        <div class="semestre">
+            <h2>Semestres 9 y 10 (Internados)</h2>
+            <div class="ramo" id="int_gin">Internado ginecología</div>
+            <div class="ramo" id="int_aps">Internado atención primaria en salud</div>
+            <div class="ramo" id="int_neo">Internado neonatología</div>
+            <div class="ramo" id="int_ele">Internado electivo</div>
+            <div class="ramo" id="int_obs">Internado obstetricia</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
