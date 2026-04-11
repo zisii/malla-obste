@@ -3,42 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Malla Obstetricia Interactiva</title>
+    <title>Malla Interactiva - Obstetricia</title>
     <style>
         :root {
             --pink-light: #fce4ec;
-            --pink-medium: #f06292;
+            --pink-main: #f06292;
             --pink-dark: #ad1457;
-            --pink-checked: #880e4f;
-            --bg-color: #fff9fb;
-            --text-color: #4a148c;
+            --locked-bg: #e0e0e0;
+            --locked-text: #9e9e9e;
+            --unlocked-bg: #ffffff;
+            --unlocked-border: #f06292;
+            --passed-bg: #d81b60;
+            --passed-text: #ffffff;
+            --bg-page: #fff9fb;
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-page);
+            color: #333;
             margin: 0;
             padding: 20px;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+        h1 { text-align: center; color: var(--pink-dark); }
+        p.instrucciones { text-align: center; color: #666; margin-bottom: 30px; font-size: 0.95rem; }
 
-        h1 { color: var(--pink-dark); margin-bottom: 5px; }
-        p.desc { font-style: italic; color: #888; margin-bottom: 20px; }
-
-        .malla-grid {
+        .malla-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); /* 5 años */
+            grid-template-columns: repeat(5, 1fr);
             gap: 15px;
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
         }
 
-        .año-col {
+        .year-col {
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -46,216 +45,262 @@
 
         .semestre {
             background: #fff;
-            border: 2px solid var(--pink-light);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 2px solid var(--pink-light);
         }
 
-        .semestre h3 {
-            font-size: 0.9rem;
+        .semestre h2 {
+            font-size: 1rem;
             text-align: center;
-            margin: 0 0 10px 0;
-            padding-bottom: 5px;
+            color: var(--pink-dark);
+            margin-top: 0;
+            margin-bottom: 15px;
             border-bottom: 1px solid var(--pink-light);
-            color: var(--pink-medium);
+            padding-bottom: 5px;
         }
 
         .ramo {
-            font-size: 0.75rem;
-            padding: 8px;
-            margin-bottom: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
             border-radius: 6px;
-            border: 1px solid #eee;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.3;
+            transition: all 0.3s ease;
             position: relative;
-            background-color: white;
-            line-height: 1.2;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 40px;
         }
 
-        .ramo:hover {
-            border-color: var(--pink-medium);
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-        }
-
-        /* Estado: Seleccionado (Cursado) */
-        .ramo.cursado {
-            background-color: var(--pink-checked) !important;
-            color: white !important;
-            border-color: var(--pink-checked);
-        }
-        .ramo.cursado::after {
-            content: " ✓";
-            font-weight: bold;
-        }
-
-        /* Estado: Resaltado por Prerrequisito (Hover) */
-        .ramo.highlight-path {
-            background-color: var(--pink-light);
-            border: 1px solid var(--pink-medium);
-            color: var(--pink-dark);
-            font-weight: bold;
-        }
-
-        .creditos {
-            display: block;
+        .ramo .cr {
             font-size: 0.65rem;
-            color: #999;
-            margin-top: 3px;
+            margin-top: 5px;
+            font-weight: normal;
         }
-        .ramo.cursado .creditos { color: #fce4ec; }
 
-        @media (max-width: 1000px) {
-            .malla-grid { grid-template-columns: repeat(2, 1fr); }
+        /* ESTADO: BLOQUEADO (Por defecto) */
+        .ramo.locked {
+            background-color: var(--locked-bg);
+            color: var(--locked-text);
+            border: 1px dashed #bdbdbd;
+            cursor: not-allowed;
+            opacity: 0.7;
         }
-        @media (max-width: 600px) {
-            .malla-grid { grid-template-columns: 1fr; }
+
+        /* ESTADO: DESBLOQUEADO (Se puede cursar) */
+        .ramo.unlocked {
+            background-color: var(--unlocked-bg);
+            color: #333;
+            border: 2px solid var(--unlocked-border);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(240, 98, 146, 0.2);
         }
+        .ramo.unlocked:hover {
+            transform: translateY(-2px);
+            background-color: var(--pink-light);
+        }
+
+        /* ESTADO: CURSADO (Aprobado) */
+        .ramo.passed {
+            background-color: var(--passed-bg);
+            color: var(--passed-text);
+            border: 2px solid var(--pink-dark);
+            cursor: pointer;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .ramo.passed::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .ramo.passed .cr { color: #f8bbd0; }
+
+        @media (max-width: 1200px) { .malla-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .malla-container { grid-template-columns: repeat(1, 1fr); } }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>🌸 Malla Interactiva de Obstetricia 🌸</h1>
-    <p class="desc">Clic para marcar como cursado | Pasa el mouse para ver qué ramos abre</p>
-</header>
+    <h1>🌸 Malla Estricta: Obstetricia y Puericultura 🌸</h1>
+    <p class="instrucciones">
+        Haz clic en los ramos blancos para "Aprobarlos". Los ramos grises están bloqueados hasta que apruebes <b>todos</b> sus prerrequisitos exactos.<br>
+        (Haz clic en un ramo rosado para desmarcarlo).
+    </p>
 
-<div class="malla-grid">
-    <div class="año-col">
-        <div class="semestre">
-            <h3>Semestre I</h3>
-            <div class="ramo" id="quimica" data-opens="bioquimica">Química Gral. y Orgánica <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="biogen" data-opens="fisio-gen micro-1">Biología y Genética <span class="creditos">7 Cr</span></div>
-            <div class="ramo">Matemáticas <span class="creditos">3 Cr</span></div>
-            <div class="ramo" id="fundamentos" data-opens="sexualidad educacion">Fundamentos Humanistas <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="demografia" data-opens="salud-fam-1 dis-inv">Demografía y Epidemio. <span class="creditos">7 Cr</span></div>
-            <div class="ramo">Formación General I <span class="creditos">2 Cr</span></div>
-        </div>
-        <div class="semestre">
-            <h3>Semestre II</h3>
-            <div class="ramo" id="bioquimica" data-opens="fisio-sist micro-1">Bioquímica Metabolismo <span class="creditos">3 Cr</span></div>
-            <div class="ramo" id="fisica" data-opens="fisio-gen">Física <span class="creditos">3 Cr</span></div>
-            <div class="ramo">Anatomía <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="histologia" data-opens="fisio-sist obstetricia-1">Histología y Embrio. <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="matron-1" data-opens="matron-2">Matronería Aplicada I <span class="creditos">7 Cr</span></div>
-            <div class="ramo" id="gestion-1" data-opens="habilidades">Gestión y Liderazgo <span class="creditos">5 Cr</span></div>
-            <div class="ramo">Inglés I <span class="creditos">3 Cr</span></div>
-        </div>
-    </div>
-
-    <div class="año-col">
-        <div class="semestre">
-            <h3>Semestre III</h3>
-            <div class="ramo" id="fisio-gen" data-opens="fisio-sist">Fisiología General <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="sexualidad" data-opens="gine-1">Salud Sexual <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="educacion" data-opens="clin-int-ed">Educación en Salud <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="matron-2" data-opens="obstetricia-1 neo-1">Matronería Aplicada II <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="salud-fam-1" data-opens="clin-aps-1">Salud Familiar I <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="habilidades" data-opens="identidad">Habilidades Psicosoc. <span class="creditos">4 Cr</span></div>
-            <div class="ramo">Inglés II <span class="creditos">3 Cr</span></div>
-        </div>
-        <div class="semestre">
-            <h3>Semestre IV</h3>
-            <div class="ramo" id="fisio-sist" data-opens="clin-partos-1 clin-neo-1 clin-puerperio clin-gine-1 fisiopatologia">Fisiología de Sistemas <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="micro-1" data-opens="clin-partos-1 clin-neo-1 clin-puerperio clin-gine-1 fisiopatologia micro-2">Micro I y Farmacología <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="gine-1" data-opens="clin-aps-1 clin-gine-1 gine-2">Ginecología I <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="obstetricia-1" data-opens="clin-partos-1 clin-aps-1 clin-puerperio">Obstetricia I <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="neo-1" data-opens="clin-neo-1">Neonatología I <span class="creditos">6 Cr</span></div>
-            <div class="ramo">Inglés III <span class="creditos">3 Cr</span></div>
-        </div>
-    </div>
-
-    <div class="año-col">
-        <div class="semestre">
-            <h3>Semestre V</h3>
-            <div class="ramo" id="clin-partos-1" data-opens="obstetricia-2">Clínica Partos I <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="clin-neo-1" data-opens="neo-2">Clínica Neonatología I <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="clin-aps-1" data-opens="salud-fam-2 obstetricia-2">Clínica APS I <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="clin-puerperio" data-opens="obstetricia-2">Clínica Puerperio <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="clin-gine-1" data-opens="matron-med-quir gine-2">Clínica Ginecología I <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="dis-inv" data-opens="bases-ev">Diseños Investigación <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="ed-inter-1" data-opens="ed-inter-2">Ed. Interprofesional I <span class="creditos">3 Cr</span></div>
-        </div>
-        <div class="semestre">
-            <h3>Semestre VI</h3>
-            <div class="ramo" id="fisiopatologia">Fisiopatología <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="micro-2">Microbiología II <span class="creditos">3 Cr</span></div>
-            <div class="ramo" id="neo-2" data-opens="matron-med-quir">Neonatología II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="salud-fam-2" data-opens="clin-int-ed">Salud Familiar II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="obstetricia-2" data-opens="matron-med-quir">Obstetricia II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="identidad">Identidad y Resp. <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="bases-ev" data-opens="clin-int-ed seminario-1">Bases Evidencia <span class="creditos">3 Cr</span></div>
-        </div>
-    </div>
-
-    <div class="año-col">
-        <div class="semestre">
-            <h3>Semestre VII</h3>
-            <div class="ramo" id="clin-int-ed" data-opens="clin-aps-2">Clínica Interv. Ed. <span class="creditos">4 Cr</span></div>
-            <div class="ramo" id="matron-med-quir" data-opens="aro partos-2 gine-2-clin neo-2-clin clin-aps-2">Matronería Med. Quirúr. <span class="creditos">8 Cr</span></div>
-            <div class="ramo" id="gine-2" data-opens="gine-2-clin clin-aps-2">Ginecología II <span class="creditos">6 Cr</span></div>
-            <div class="ramo" id="gestion-2">Gestión Clínica y Lider. <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="seminario-1" data-opens="seminario-2">Seminario Invest. I <span class="creditos">3 Cr</span></div>
-            <div class="ramo">Formación Gral. II <span class="creditos">2 Cr</span></div>
-            <div class="ramo">Formación Gral. III <span class="creditos">2 Cr</span></div>
-        </div>
-        <div class="semestre">
-            <h3>Semestre VIII</h3>
-            <div class="ramo" id="aro">Clínica Alto Riesgo <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="partos-2">Clínica Partos II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="gine-2-clin">Clínica Ginecología II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="neo-2-clin">Clínica Neonatología II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="clin-aps-2">Clínica APS II <span class="creditos">5 Cr</span></div>
-            <div class="ramo" id="seminario-2">Seminario Invest. II <span class="creditos">2 Cr</span></div>
-            <div class="ramo" id="ed-inter-2">Ed. Interprofesional II <span class="creditos">3 Cr</span></div>
-        </div>
-    </div>
-
-    <div class="año-col">
-        <div class="semestre">
-            <h3>Semestre IX e X (Internados)</h3>
-            <div class="ramo">Internado Ginecología <span class="creditos">12 Cr</span></div>
-            <div class="ramo">Internado APS <span class="creditos">12 Cr</span></div>
-            <div class="ramo">Internado Neonatología <span class="creditos">12 Cr</span></div>
-            <div class="ramo">Internado Obstetricia <span class="creditos">12 Cr</span></div>
-            <div class="ramo">Internado Electivo <span class="creditos">12 Cr</span></div>
-            <div class="ramo" style="border: 2px dashed var(--pink-medium); text-align: center; margin-top: 20px;">
-                <strong>TITULACIÓN</strong>
+    <div class="malla-container">
+        
+        <div class="year-col">
+            <div class="semestre">
+                <h2>Semestre I</h2>
+                <div class="ramo unlocked" id="quimica">Química general y orgánica <span class="cr">4 Cr</span></div>
+                <div class="ramo unlocked" id="biogen">Biología y genética <span class="cr">7 Cr</span></div>
+                <div class="ramo unlocked" id="mate">Matemáticas <span class="cr">3 Cr</span></div>
+                <div class="ramo unlocked" id="fundamentos">Fundamentos humanistas para la atención SSR <span class="cr">6 Cr</span></div>
+                <div class="ramo unlocked" id="demografia">Demografía y epidemiología <span class="cr">7 Cr</span></div>
+                <div class="ramo unlocked" id="fg1">Formación General I <span class="cr">2 Cr</span></div>
+            </div>
+            <div class="semestre">
+                <h2>Semestre II</h2>
+                <div class="ramo locked" id="bioquimica" data-pre="quimica">Bioquímica del metabolismo humano <span class="cr">3 Cr</span></div>
+                <div class="ramo locked" id="fisica" data-pre="mate">Física <span class="cr">3 Cr</span></div>
+                <div class="ramo unlocked" id="anatomia">Anatomía <span class="cr">5 Cr</span></div>
+                <div class="ramo unlocked" id="histologia">Histología y embriología <span class="cr">5 Cr</span></div>
+                <div class="ramo unlocked" id="matron_1">Matronería aplicada I <span class="cr">7 Cr</span></div>
+                <div class="ramo unlocked" id="gestion_1">Gestión y liderazgo en salud <span class="cr">5 Cr</span></div>
+                <div class="ramo unlocked" id="ingles_1">Inglés I <span class="cr">3 Cr</span></div>
             </div>
         </div>
+
+        <div class="year-col">
+            <div class="semestre">
+                <h2>Semestre III</h2>
+                <div class="ramo locked" id="fisio_gen" data-pre="fisica biogen">Fisiología general <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="sexualidad" data-pre="fundamentos">Salud sexual y sexualidad <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="educacion" data-pre="fundamentos">Educación en salud <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="matron_2" data-pre="matron_1">Matronería aplicada II <span class="cr">6 Cr</span></div>
+                <div class="ramo locked" id="salud_fam_1" data-pre="demografia">Salud familiar y comunitaria I <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="habilidades" data-pre="gestion_1">Habilidades psicosociales <span class="cr">4 Cr</span></div>
+                <div class="ramo unlocked" id="ingles_2">Inglés II <span class="cr">3 Cr</span></div>
+            </div>
+            <div class="semestre">
+                <h2>Semestre IV</h2>
+                <div class="ramo locked" id="fisio_sis" data-pre="fisio_gen bioquimica histologia">Fisiología de sistemas <span class="cr">6 Cr</span></div>
+                <div class="ramo locked" id="micro_1" data-pre="biogen bioquimica">Microbiología I y farmacología <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="gine_1" data-pre="sexualidad">Ginecología I <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="obste_1" data-pre="matron_2 histologia">Obstetricia I <span class="cr">6 Cr</span></div>
+                <div class="ramo locked" id="neo_1" data-pre="matron_2">Neonatología I <span class="cr">6 Cr</span></div>
+                <div class="ramo unlocked" id="ingles_3">Inglés III <span class="cr">3 Cr</span></div>
+            </div>
+        </div>
+
+        <div class="year-col">
+            <div class="semestre">
+                <h2>Semestre V</h2>
+                <div class="ramo locked" id="clin_partos_1" data-pre="obste_1 fisio_sis micro_1">Clínica partos I <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="clin_neo_1" data-pre="neo_1 fisio_sis micro_1">Clínica neonatología I <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="clin_aps_1" data-pre="gine_1 obste_1 salud_fam_1">Clínica APS I <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="clin_puerperio" data-pre="obste_1 fisio_sis micro_1">Clínica puerperio <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="clin_gine_1" data-pre="gine_1 micro_1 fisio_sis">Clínica ginecología I <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="dis_inv" data-pre="demografia">Diseños de investigación <span class="cr">6 Cr</span></div>
+                <div class="ramo unlocked" id="ed_inter_1">Ed. interprofesional y práctica col. I <span class="cr">3 Cr</span></div>
+            </div>
+            <div class="semestre">
+                <h2>Semestre VI</h2>
+                <div class="ramo locked" id="fisiopat" data-pre="micro_1 fisio_sis">Fisiopatología y farmacología <span class="cr">6 Cr</span></div>
+                <div class="ramo locked" id="micro_2" data-pre="micro_1">Microbiología II <span class="cr">3 Cr</span></div>
+                <div class="ramo locked" id="neo_2" data-pre="clin_neo_1">Neonatología II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="salud_fam_2" data-pre="clin_aps_1">Salud familiar y comunitaria II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="obste_2" data-pre="clin_puerperio clin_partos_1 clin_aps_1">Obstetricia II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="identidad" data-pre="habilidades">Identidad y resp. profesional <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="bases_ev" data-pre="dis_inv">Bases práctica en evidencia <span class="cr">3 Cr</span></div>
+            </div>
+        </div>
+
+        <div class="year-col">
+            <div class="semestre">
+                <h2>Semestre VII</h2>
+                <div class="ramo locked" id="clin_int_ed" data-pre="salud_fam_2 bases_ev educacion">Clínica intervenciones educ. <span class="cr">4 Cr</span></div>
+                <div class="ramo locked" id="matron_mq" data-pre="neo_2 obste_2 clin_gine_1">Matronería médico quirúrgica <span class="cr">8 Cr</span></div>
+                <div class="ramo locked" id="gine_2" data-pre="clin_gine_1">Ginecología II <span class="cr">6 Cr</span></div>
+                <div class="ramo locked" id="gestion_2" data-pre="gestion_1">Gestión clínica y liderazgo <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="sem_inv_1" data-pre="bases_ev">Seminario investigación I <span class="cr">3 Cr</span></div>
+                <div class="ramo unlocked" id="fg2">Formación General II <span class="cr">2 Cr</span></div>
+                <div class="ramo unlocked" id="fg3">Formación General III <span class="cr">2 Cr</span></div>
+            </div>
+            <div class="semestre">
+                <h2>Semestre VIII</h2>
+                <div class="ramo locked" id="aro" data-pre="matron_mq">Clínica alto riesgo obstétrico <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="clin_partos_2" data-pre="matron_mq">Clínica partos II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="clin_gine_2" data-pre="gine_2 matron_mq">Clínica ginecología II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="clin_neo_2" data-pre="matron_mq">Clínica neonatología II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="clin_aps_2" data-pre="clin_int_ed matron_mq gine_2">Clínica APS II <span class="cr">5 Cr</span></div>
+                <div class="ramo locked" id="sem_inv_2" data-pre="sem_inv_1">Seminario investigación II <span class="cr">2 Cr</span></div>
+                <div class="ramo locked" id="ed_inter_2" data-pre="ed_inter_1">Ed. interprofesional II <span class="cr">3 Cr</span></div>
+            </div>
+        </div>
+
+        <div class="year-col">
+            <div class="semestre">
+                <h2>Semestres IX y X (Internados)</h2>
+                <div class="ramo unlocked" id="int_gine">Internado ginecología <span class="cr">12 Cr</span></div>
+                <div class="ramo unlocked" id="int_aps">Internado APS <span class="cr">12 Cr</span></div>
+                <div class="ramo unlocked" id="int_neo">Internado neonatología <span class="cr">12 Cr</span></div>
+                <div class="ramo unlocked" id="int_elec">Internado electivo <span class="cr">12 Cr</span></div>
+                <div class="ramo unlocked" id="int_obste">Internado obstetricia <span class="cr">12 Cr</span></div>
+            </div>
+        </div>
+
     </div>
-</div>
 
-<script>
-    const ramos = document.querySelectorAll('.ramo');
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const ramos = document.querySelectorAll(".ramo");
 
-    ramos.forEach(ramo => {
-        // EVENTO CLIC: Marcar como cursado
-        ramo.addEventListener('click', () => {
-            ramo.classList.toggle('cursado');
-        });
+            // Función principal que evalúa el estado de toda la malla
+            function evaluarMalla() {
+                ramos.forEach(ramo => {
+                    const prerequisitos_str = ramo.getAttribute("data-pre");
+                    
+                    // Si el ramo tiene prerrequisitos
+                    if (prerequisitos_str) {
+                        const pre_ids = prerequisitos_str.trim().split(" ");
+                        let todos_aprobados = true;
 
-        // EVENTO HOVER: Ver qué abre
-        ramo.addEventListener('mouseenter', () => {
-            const opens = ramo.getAttribute('data-opens');
-            if (opens) {
-                const targets = opens.split(' ');
-                targets.forEach(id => {
-                    const targetEl = document.getElementById(id);
-                    if (targetEl) targetEl.classList.add('highlight-path');
+                        // Verificar si TODOS los prerrequisitos están "passed"
+                        pre_ids.forEach(id => {
+                            const preElemento = document.getElementById(id);
+                            if (preElemento && !preElemento.classList.contains("passed")) {
+                                todos_aprobados = false;
+                            }
+                        });
+
+                        // Actualizar estado del ramo
+                        if (todos_aprobados) {
+                            ramo.classList.remove("locked");
+                            // Solo agregamos unlocked si no ha sido aprobado ya
+                            if (!ramo.classList.contains("passed")) {
+                                ramo.classList.add("unlocked");
+                            }
+                        } else {
+                            // Si falta algún requisito, se bloquea y se le quita lo aprobado
+                            ramo.classList.remove("unlocked");
+                            ramo.classList.remove("passed");
+                            ramo.classList.add("locked");
+                        }
+                    }
                 });
             }
-        });
 
-        ramo.addEventListener('mouseleave', () => {
-            document.querySelectorAll('.ramo').forEach(el => {
-                el.classList.remove('highlight-path');
+            // Asignar el evento clic a cada ramo
+            ramos.forEach(ramo => {
+                ramo.addEventListener("click", () => {
+                    // Solo podemos hacer clic si no está bloqueado
+                    if (!ramo.classList.contains("locked")) {
+                        // Alternar entre cursado (passed) y disponible (unlocked)
+                        if (ramo.classList.contains("passed")) {
+                            ramo.classList.remove("passed");
+                            ramo.classList.add("unlocked");
+                        } else {
+                            ramo.classList.remove("unlocked");
+                            ramo.classList.add("passed");
+                        }
+                        // Después de cualquier cambio, reevaluamos toda la malla
+                        evaluarMalla();
+                    }
+                });
             });
-        });
-    });
-</script>
 
+            // Primera evaluación al cargar la página
+            evaluarMalla();
+        });
+    </script>
 </body>
 </html>
